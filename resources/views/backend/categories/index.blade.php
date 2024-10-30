@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'categories')
+@section('title', 'Categories')
 
 @push('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
@@ -16,11 +16,28 @@
         <div class="col-md-8">
             <x-card icon="list" title="Categories">
 
-                <div class="table-responsive">
+                <button class="btn btn-primary" onClick="modalCategory()"><i class="fas fa-"></i> Create</button>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalImport"><i class="fas fa-file-excel"></i> Import</button>
+
+                @session('success')
+                    <div class="alert alert-success alert-dismissible fade show mt-2" role="success">
+                        <button type="button" class="btn-close" data-bs-dismiss="success" aria-label="Close"></button>
+                        {{ session('success') }}
+                    </div>
+                @endsession
+
+                @session('error')
+                    <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        {{ session('error') }}
+                    </div>
+                @endsession
+
+                <div class="table-responsive-sm">
                     <table class="table table-striped table-bordered" id="yajra">
                         <thead>
                             <tr>
-                                <th>No</th>
+                                <th width="1%">No</th>
                                 <th>Name</th>
                                 <th>Slug</th>
                                 <th>Action</th>
@@ -35,6 +52,9 @@
         </div>
     </div>
 </div>
+
+@include('backend.categories._modal')
+@include('backend.categories._modal-download')
 @endsection
 
 @push('js')
@@ -42,62 +62,16 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
+    <script src="{{ asset('assets/backend/js/helper.js')}}"></script>
+    <script src="{{ asset('assets/backend/js/category.js')}}"></script>
 
+
+    <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
+
+    {!! JsValidator::formRequest('App\Http\Requests\CategoryRequest', '#formCategory') !!}
 
     <script>
-        $(document).ready(function() {
-            categoryTable();
-        });
 
-        function categoryTable() {
-            $('#yajra').DataTable({
-                processing: true,
-                serverSide: true,
-                responsive: true,
-                ajax: "/admin/categories/serverside",
-                columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'name', name: 'name'},
-                    {data: 'slug', name: 'slug'},
-                    {data: 'action', name: 'action', orderable: true, searchable: true},
-                ],
-            })
-        }
-
-        const deleteData = (e) => {
-            let id = e.getAttribute('data-id');
-
-            Swal.fire({
-                title: "Are you sure?",
-                text: "Do you want to delete this category?",
-                icon: "question",
-                iconHtml: "?",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Delete",
-                cancelButtonText: "Cancel",
-                allowOutsideClick: false,
-                showCancelButton: true,
-                showCloseButton: true
-            }).then((result) => {
-                if(result.value) {
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        type: "DELETE",
-                        url: "/admin/categories/" + id,
-                        dataType: "json",
-                        success: function (response) {
-                            alert('ok')
-                        },
-                        error: function (response) {
-                            console.log(response);
-                        }
-                    });
-                }
-            })
-        }
     </script>
-@endpush
 
+@endpush
