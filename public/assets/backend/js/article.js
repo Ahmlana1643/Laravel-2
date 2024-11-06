@@ -37,6 +37,10 @@ function articleTable() {
                 name: 'published'
             },
             {
+                data: 'is_confirm',
+                name: 'is_confirm'
+            },
+            {
                 data: 'action',
                 name: 'action',
                 orderable: true,

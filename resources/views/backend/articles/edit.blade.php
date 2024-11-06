@@ -72,7 +72,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="image">Image</label>
                                 <input type="file" name="image" id="image" class="form-control" accept="image/*">
@@ -83,12 +83,26 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                @if (auth()->user()->hasRole('owner'))
+                                <label for="is_confirm">Confirm Articles</label>
+                                <select name="is_confirm" id="is_confirm" class="form-select">
+                                    <option value="" hidden>-- choose --</option>
+                                    <option value="1" {{ $article->is_confirm == 1 ? 'selected' : '' }}>Confirmed</option>
+                                    <option value="0" {{ $article->is_confirm == 0 ? 'selected' : '' }}>Not Confirmed</option>
+                                </select>
+                                @endif
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="keywords">Keywords</label>
                                 <input type="text" name="keywords" id="keywords" value="{{ $article->keywords }}" class="form-control">
                             </div>
                         </div>
+
                     </div>
 
                     <div class="float-end">

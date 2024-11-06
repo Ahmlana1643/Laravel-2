@@ -14,17 +14,19 @@ use App\Http\Controllers\Frontend\CategoryController as FrontendCategoryControll
 
 Route::get('/', [HomeController::class, 'index'])->name('frontend.home');
 
-// Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+
+Route::get('article/search', [FrontendArticleController::class, 'index'])->name('frontend.article.search');
 
 Route::resource('article', FrontendArticleController::class)
 ->only('index', 'show')
 ->names('articles');
 
-// Route::resource('category', FrontendCategoryController::class)
-// ->only('index', 'show')
-// ->names('category');
+Route::resource('category', FrontendCategoryController::class)
+->only('index', 'show')
+->names('category');
 
-// Route::get('tag/{slug}', [FrontendTagController::class, 'showByTag'])->name('frontend.tag');
+Route::get('tag/{slug}', [FrontendTagController::class, 'showByTag'])->name('frontend.tag');
 
 Route::prefix('admin')->group(function () {
     Route::get('dashboard', function () {
@@ -37,6 +39,7 @@ Route::prefix('admin')->group(function () {
     Route::delete('articles/force-delete/{uuid}', [ArticleController::class, 'forceDelete']);
     Route::resource('articles', ArticleController::class)
         ->names('admin.articles');
+    Route::post('articles/confirm/{uuid}', [ArticleController::class, 'confirm'])->name('admin.articles.confirm');
 
     // categories
     Route::get('categories/serverside', [CategoryController::class, 'serverside'])->name('admin.categories.serverside');
@@ -54,7 +57,7 @@ Route::prefix('admin')->group(function () {
     // writers
     Route::get('writers/serverside', [WriterController::class, 'serverside'])->name('admin.writers.serverside');
     Route::resource('writers', WriterController::class)
-        ->only('index')
+        ->only('index', 'update')
         ->names('admin.writers');
 });
 

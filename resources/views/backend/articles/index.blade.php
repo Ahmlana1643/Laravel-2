@@ -28,6 +28,7 @@
                                 <th>Tag</th>
                                 <th>Views</th>
                                 <th>Status</th>
+                                <th>Article Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

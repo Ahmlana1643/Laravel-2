@@ -14,7 +14,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <x-card icon="tag" title="Tags">
+            <x-card icon="users" title="Users">
 
                 <div class="table-responsive-sm">
                     <table class="table table-striped table-bordered" id="yajra">
@@ -38,7 +38,7 @@
     </div>
 </div>
 
-@include('backend.tags._modal')
+@include('backend.writers._modal')
 @endsection
 
 @push('js')

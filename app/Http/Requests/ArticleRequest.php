@@ -28,11 +28,12 @@ class ArticleRequest extends FormRequest
             "slug" => "nullable",
             "content" => "required",
             "published" => "required|in:0,1",
+            "is_confirm" => auth()->user()->hasRole('owner') ? "required|in:0,1" : "nullable",
             "category_id" => "required|exists:categories,id",
             "tag_id" => "required|array",
             "tag_id.*" => "required|exists:tags,id",
             "keywords" => "required|min:3",
-            "image" => $this->isMethod('POST') ? "required|file|image|max:2048|mimes:png,jpg,jpeg,webp|mimetypes:image/png,image/jpg,image/jpeg,image/webp" : "nullable|file|image|max:2048|mimes:png,jpg,jpeg,webp|mimetypes:image/png,image/jpg,image/jpeg,image/webp",
+            "image" => $this->isMethod('POST') ? "required|file|image|max:4096|mimes:png,jpg,jpeg,webp|mimetypes:image/png,image/jpg,image/jpeg,image/webp" : "nullable|file|image|max:2048|mimes:png,jpg,jpeg,webp|mimetypes:image/png,image/jpg,image/jpeg,image/webp",
         ];
     }
 }

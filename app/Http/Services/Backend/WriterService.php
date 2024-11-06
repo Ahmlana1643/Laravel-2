@@ -3,7 +3,7 @@
 namespace App\Http\Services\Backend;
 
 use App\Models\User;
-use Illuminate\Support\Str;
+use App\Models\Writer;
 use Yajra\DataTables\Facades\DataTables;
 
 class WriterService{
@@ -50,7 +50,7 @@ public function dataTable($request)
                     return $data->is_verified ? '<span class="badge bg-success">'.date('d-m-Y H:i:s', strtotime($data->is_verified)).'</span>' : '<span class="badge bg-danger">Unverified</span>';
                 })
                 ->addColumn('action', function ($data) {
-                    return '
+                    $actionBtn = '
                         <div class="text-center" width="10%">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-success" onclick="editData(this)" data-id="' . $data->id . '">
@@ -76,8 +76,30 @@ public function dataTable($request)
 
     }
 
-    // public function getFirstBy(string $column, string $value)
-    // {
-    //     return User::where($column, $value)->firstOrFail();
-    // }
+    public function update(array $data, string $uuid)
+{
+    // Hash password jika ada di data input
+    if (isset($data['password'])) {
+        $data['password'] = bcrypt($data['password']);
+    }
+
+    // Set nilai verified_at berdasarkan is_verified
+    if (isset($data['is_verified']) && $data['is_verified'] == 1) {
+        $data['verified_at'] = $data['verified_at'] ?? date('Y-m-d');
+    } else {
+        $data['verified_at'] = null; // Kosongkan jika belum verified
+    }
+
+    // Ambil writer berdasarkan UUID dan lakukan update
+    $writer = Writer::where('uuid', $uuid)->firstOrFail();
+    $writer->update($data);
+
+    return $writer;
+}
+
+
+    public function getFirstBy(string $column, string $value)
+    {
+        return User::where($column, $value)->firstOrFail();
+    }
 }

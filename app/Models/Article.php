@@ -22,6 +22,7 @@ class Article extends Model
         'content',
         'published',
         'published_at',
+        'is_confirm',
         'image',
         'keywords'
     ];

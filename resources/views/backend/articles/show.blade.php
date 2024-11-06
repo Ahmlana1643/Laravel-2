@@ -84,6 +84,18 @@
                                 <td>{{ $article->keywords }}</td>
                             </tr>
 
+                            <tr>
+                                <th>Confirm Articles</th>
+                                <td>
+                                    @if ($article->is_confirm == 1)
+                                        <span class="badge bg-success">Confirm</span>
+                                    @else
+                                        <span class="badge bg-danger">Not Confirm</span>
+                                    @endif
+                                </td>
+
+                            </tr>
+
                         </table>
 
                         <div class="float-end">

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\View\View;
@@ -68,7 +67,8 @@ class ArticleController extends Controller
      */
     public function show(string $uuid)
     {
-        $article = $this->articleService->getFirstBy('uuid', $uuid, true);
+        $article = $this->articleService
+        ->getFirstBy('uuid', $uuid, true);
 
         Gate::authorize('view', $article);
 
@@ -76,6 +76,8 @@ class ArticleController extends Controller
             'article' => $article,
         ]);
     }
+
+
 
     /**
      * Show the form for editing the specified resource.

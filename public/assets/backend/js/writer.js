@@ -42,121 +42,114 @@ function writerTable() {
     });
 };
 
-// // form create
-// const modalwriter = () => {
-//     submit_method = 'create';
-//     resetForm('#formwriter');
-//     resetValidation();
-//     $('#modalwriter').modal('show');
-//     $('.modal-title').html('<i class="fa fa-plus"></i> Create writer');
-//     $('.btnSubmit').html('<i class="fa fa-save"></i> Save');
-// }
+// form edit
+const editData = (e) => {
+    let id = e.getAttribute('data-id');
 
-// // form edit
-// const editData = (e) => {
-//     let id = e.getAttribute('data-id');
+    startLoading();
+    resetForm('#formWriter');
+    resetValidation();
 
-//     startLoading();
-//     resetForm('#formwriter');
-//     resetValidation();
+    $.ajax({
+        type: "PUT",
+        url: "/admin/writers/" + id,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Tambahkan CSRF token
+        },
+        success: function (response) {
+            let parsedData = response.data;
 
-//     $.ajax({
-//         type: "GET",
-//         url: "/admin/writers/" + id,
-//         success: function (response) {
-//             let parsedData = response.data;
+            $('#id').val(parsedData.uuid);
+            $('#name').val(parsedData.name);
+            $('#modalWriter').modal('show');
+            $('.modal-title').html('<i class="fa fa-edit"></i> Edit writer');
+            $('.btnSubmit').html('<i class="fa fa-save"></i> Save');
 
-//             $('#id').val(parsedData.uuid);
-//             $('#name').val(parsedData.name);
-//             $('#modalwriter').modal('show');
-//             $('.modal-title').html('<i class="fa fa-edit"></i> Edit writer');
-//             $('.btnSubmit').html('<i class="fa fa-save"></i> Save');
+            submit_method = 'edit';
 
-//             submit_method = 'edit';
+            stopLoading();
+        },
+        error: function (jqXHR, response) {
+            console.log(jqXHR.responseText);
+            toastError(jqXHR.responseText);
+        }
+    });
+}
 
-//             stopLoading();
-//         },
-//         error: function (jqXHR, response) {
-//             console.log(jqXHR.responseText);
-//             toastError(jqXHR.responseText);
-//         }
-//     });
-// }
+const deleteData = (e) => {
+    let id = e.getAttribute('data-id');
 
-// const deleteData = (e) => {
-//     let id = e.getAttribute('data-id');
+    Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to delete this writer?",
+        icon: "question",
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel",
+        allowOutsideClick: false,
+        showCancelButton: true,
+        showCloseButton: true
+    }).then((result) => {
+        startLoading();
 
-//     Swal.fire({
-//         title: "Are you sure?",
-//         text: "Do you want to delete this writer?",
-//         icon: "question",
-//         confirmButtonColor: "#d33",
-//         cancelButtonColor: "#3085d6",
-//         confirmButtonText: "Delete",
-//         cancelButtonText: "Cancel",
-//         allowOutsideClick: false,
-//         showCancelButton: true,
-//         showCloseButton: true
-//     }).then((result) => {
-//         startLoading();
+        if (result.value) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "DELETE",
+                url: "/admin/writers/" + id,
+                dataType: "json",
+                success: function (response) {
+                    reloadTable();
 
-//         if (result.value) {
-//             $.ajax({
-//                 headers: {
-//                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//                 },
-//                 type: "DELETE",
-//                 url: "/admin/writers/" + id,
-//                 dataType: "json",
-//                 success: function (response) {
-//                     reloadTable();
-
-//                     toastSuccess(response.message);
-//                 },
-//                 error: function (response) {
-//                     console.log(response);
-//                 }
-//             });
-//         }
-//     })
-// }
+                    toastSuccess(response.message);
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        }
+    })
+}
 
 // save data
-// $('#formwriter').on('submit', function (e) {
-//     e.preventDefault();
+$('#formWriter').on('submit', function (e) {
+    e.preventDefault();
 
-//     startLoading();
+    startLoading();
 
-//     let url, method;
-//     url = '/admin/writers';
-//     method = 'POST';
+    let url, method;
+    url = '/admin/writers';
+    method = 'POST';
 
-//     const inputForm = new FormData(this);
+    const inputForm = new FormData(this);
 
-//     if (submit_method == 'edit') {
-//         url = '/admin/writers/' + $('#id').val();
-//         inputForm.append('_method', 'PUT');
-//     }
+    if (submit_method == 'edit') {
+        url = '/admin/writers/' + $('#id').val();
+        inputForm.append('_method', 'PUT');
+    }
 
-//     $.ajax({
-//         headers: {
-//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//         },
-//         type: method,
-//         url: url,
-//         data: inputForm,
-//         contentType: false,
-//         processData: false,
-//         success: function (response) {
-//             $('#modalwriter').modal('hide');
-//             reloadTable();
-//             resetValidation();
-//             stopLoading();
-//             toastSuccess(response.message);
-//         },
-//         error: function (jqXHR, response) {
-//             console.log(response.message);
-//             toastError(jqXHR.responseText);
-//         }
-//     });
-// })
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: method,
+        url: url,
+        data: inputForm,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            $('#modalWriter').modal('hide');
+            reloadTable();
+            resetValidation();
+            stopLoading();
+            toastSuccess(response.message);
+        },
+        error: function (jqXHR, response) {
+            console.log(response.message);
+            toastError(jqXHR.responseText);
+        }
+    });
+})

@@ -27,14 +27,14 @@ class ArticleService
                         ->offset($start)
                         ->limit($limit)
                         ->withTrashed()
-                        ->get(['id', 'uuid', 'title', 'category_id', 'views', 'published', 'deleted_at']);
+                        ->get(['id', 'uuid', 'title', 'category_id', 'views', 'published','is_confirm', 'deleted_at']);
                 } else {
                     $data = Article::latest()
                         ->with('category:id,name', 'tags:id,name')
                         ->offset($start)
                         ->limit($limit)
                         ->where('user_id', auth()->user()->id)
-                        ->get(['id', 'uuid', 'title', 'category_id', 'views', 'published', 'deleted_at']);
+                        ->get(['id', 'uuid', 'title', 'category_id', 'views', 'published', 'is_confirm', 'deleted_at']);
                 }
             } else {
                 if (auth()->user()->hasRole('owner')) {
@@ -44,7 +44,7 @@ class ArticleService
                         ->offset($start)
                         ->limit($limit)
                         ->withTrashed()
-                        ->get(['id', 'uuid', 'title', 'category_id', 'views', 'published', 'deleted_at']);
+                        ->get(['id', 'uuid', 'title', 'category_id', 'views', 'published', 'is_confirm', 'deleted_at']);
                 } else {
                     $data = Article::filter($request->search['value'])
                         ->latest()
@@ -52,7 +52,7 @@ class ArticleService
                         ->offset($start)
                         ->limit($limit)
                         ->where('user_id', auth()->user()->id)
-                        ->get(['id', 'uuid', 'title', 'category_id', 'views', 'published', 'deleted_at']);
+                        ->get(['id', 'uuid', 'title', 'category_id', 'views', 'published', 'is_confirm', 'deleted_at']);
                 }
 
                 $totalFiltered = $data->count();
@@ -78,6 +78,13 @@ class ArticleService
                         return '<span class="badge bg-success">Published</span>';
                     } else {
                         return '<span class="badge bg-danger">Draft</span>';
+                    }
+                })
+                ->editColumn('is_confirm', function ($data) {
+                    if ($data->is_confirm == 1) {
+                        return '<span class="badge bg-info">Confirmed</span>';
+                    } else {
+                        return '<span class="badge bg-warning">Not Confirmed</span>';
                     }
                 })
                 ->editColumn('views', function ($data) {
@@ -113,7 +120,7 @@ class ArticleService
 
                     return $actionBtn;
                 })
-                ->rawColumns(['title', 'category_id', 'tag_id', 'published', 'views', 'action'])
+                ->rawColumns(['title', 'category_id', 'tag_id', 'published', 'is_confirm', 'views', 'action'])
                 ->with([
                     'recordsTotal' => $totalData,
                     'recordsFiltered' => $totalFiltered,
@@ -167,6 +174,8 @@ class ArticleService
             $data['published_at'] = date('Y-m-d');
         }
 
+        
+
         // insert article_tag
         $article = Article::where('uuid', $uuid)->firstOrFail();
         $article->update($data);
@@ -207,4 +216,5 @@ class ArticleService
 
         return $getArticle;
     }
+
 }

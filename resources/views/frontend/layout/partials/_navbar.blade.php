@@ -26,12 +26,8 @@
                     <div class="d-flex icon">
                         <p class="mb-0 text-white me-2">Follow Us:</p>
                         <a href="" class="me-2"><i class="fab fa-facebook-f text-body link-hover"></i></a>
-                        <a href="" class="me-2"><i class="fab fa-twitter text-body link-hover"></i></a>
-                        <a href="" class="me-2"><i class="fab fa-instagram text-body link-hover"></i></a>
                         <a href="" class="me-2"><i class="fab fa-youtube text-body link-hover"></i></a>
                         <a href="" class="me-2"><i class="fab fa-linkedin-in text-body link-hover"></i></a>
-                        <a href="" class="me-2"><i class="fab fa-skype text-body link-hover"></i></a>
-                        <a href="" class=""><i class="fab fa-pinterest-p text-body link-hover"></i></a>
                     </div>
                 </div>
             </div>
@@ -40,7 +36,7 @@
     <div class="container-fluid bg-light">
         <div class="container px-0">
             <nav class="navbar navbar-light navbar-expand-xl">
-                <a href="index.html" class="navbar-brand mt-3">
+                <a href="{{ route('frontend.home') }}" class="navbar-brand mt-3">
                     <p class="text-primary display-6 mb-2" style="line-height: 0;">Laravel</p>
                     <small class="text-body fw-normal" style="letter-spacing: 12px;">Blogger</small>
                 </a>
@@ -49,16 +45,16 @@
                 </button>
                 <div class="collapse navbar-collapse bg-light py-3" id="navbarCollapse">
                     <div class="navbar-nav mx-auto border-top">
-                        <a href="{{ route('home') }}" class="nav-item nav-link active">Home</a>
-                        <a href="detail-page.html" class="nav-item nav-link">Articles</a>
+                        <a href="{{ route('frontend.home') }}" class="nav-item nav-link active">Home</a>
+                        <a href="{{ route('articles.index') }}" class="nav-item nav-link">Articles</a>
 
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Categories</a>
                             <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                                <a href="#" class="dropdown-item">Sports</a>
-                                <a href="#" class="dropdown-item">Megazine</a>
-                                <a href="#" class="dropdown-item">Politics</a>
-                                <a href="#" class="dropdown-item">Technology</a>
+                                <a href="{{ route('category.show', 'laravel') }}" class="dropdown-item">Laravel</a>
+                                <a href="{{ route('category.show', 'java-script') }}" class="dropdown-item">Java Script</a>
+                                <a href="{{ route('category.show', 'adonisjs') }}" class="dropdown-item">Adonis Js</a>
+                                <a href="{{ route('category.index') }}" class="dropdown-item">All Category</a>
                             </div>
                         </div>
                         <a href="contact.html" class="nav-item nav-link">Contact Us</a>
